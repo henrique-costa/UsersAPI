@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using UsersAPI.Data.DTO;
 
 namespace UsersAPI.Controllers
 {
@@ -9,6 +10,11 @@ namespace UsersAPI.Controllers
         public RegistrationController()
         {
 
+        }
+
+        public IActionResult RegisterUser(CreateUserDTO createDto)
+        {
+            return Ok();
         }
     }
 }
