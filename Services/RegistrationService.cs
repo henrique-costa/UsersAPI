@@ -2,8 +2,10 @@
 using FluentResults;
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using UsersAPI.Data.DTO;
+using UsersAPI.Data.Requests;
 using UsersAPI.Model;
 
 namespace UsersAPI.Services
@@ -32,6 +34,20 @@ namespace UsersAPI.Services
             }
 
             return Result.Fail("Fail to register User");
+        }
+
+        public Result ActivateUserAccount(ActivateAccountRequest request)
+        {
+            var identityUser = _userManager.Users.FirstOrDefault(user => user.Id == request.UserId);
+
+            var identityResult = _userManager.ConfirmEmailAsync(identityUser, request.ActivationCode).Result;
+
+            if (identityResult.Succeeded)
+            {
+                return Result.Ok();
+            }
+
+            return Result.Fail("Fail to activate user account");
         }
     }
 }
