@@ -22,11 +22,13 @@ namespace UsersAPI.Services
         {
             UserModel user = _mapper.Map<UserModel>(createDto);
             IdentityUser<int> identityUser = _mapper.Map<IdentityUser<int>>(user);
-            Task<IdentityResult> resultIdentity = _userManager.CreateAsync(identityUser, createDto.Password);
+            Task<IdentityResult> resultIdentity = _userManager
+                .CreateAsync(identityUser, createDto.Password);
 
             if (resultIdentity.Result.Succeeded)
             {
-                return Result.Ok();
+                string code = _userManager.GenerateEmailConfirmationTokenAsync(identityUser).Result;
+                return Result.Ok().WithSuccess(code);
             }
 
             return Result.Fail("Fail to register User");

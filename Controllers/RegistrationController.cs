@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using UsersAPI.Data.DTO;
 using UsersAPI.Services;
 
@@ -24,7 +25,7 @@ namespace UsersAPI.Controllers
             {
                 return StatusCode(500);
             }
-            return Ok();
+            return Ok(result.Successes.FirstOrDefault());
         }
     }
 }
