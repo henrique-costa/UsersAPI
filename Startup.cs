@@ -40,6 +40,7 @@ namespace UsersAPI
                 .AddDefaultTokenProviders();
             services.AddScoped<RegistrationService, RegistrationService>();
             services.AddScoped<TokenService, TokenService>();
+            services.AddScoped<EmailService, EmailService>();
             services.AddScoped<LoginService, LoginService>();
             services.AddScoped<LogoutService, LogoutService>();
             services.AddControllers();

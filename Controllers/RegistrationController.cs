@@ -30,8 +30,8 @@ namespace UsersAPI.Controllers
         }
 
 
-        [HttpPost("/ativa")]
-        public IActionResult ActivateUserAccount(ActivateAccountRequest request)
+        [HttpGet("/ativa")]
+        public IActionResult ActivateUserAccount([FromQuery] ActivateAccountRequest request)
         {
             Result result = _registrationService.ActivateUserAccount(request);
             if (result.IsFailed)
