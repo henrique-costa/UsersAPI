@@ -21,7 +21,7 @@ namespace UsersAPI.Controllers
         [HttpPost]
         public IActionResult RegisterUser(CreateUserDTO createDto)
         {
-            Result result = _registrationService.RegisterUser(createDto);
+            Result result = _registrationService.RegisterUserAsync(createDto);
             if (result.IsFailed) 
             {
                 return StatusCode(500);
@@ -30,8 +30,8 @@ namespace UsersAPI.Controllers
         }
 
 
-        [HttpPost("/ativa")]
-        public IActionResult ActivateUserAccount(ActivateAccountRequest request)
+        [HttpGet("/ativa")]
+        public IActionResult ActivateUserAccount([FromQuery] ActivateAccountRequest request)
         {
             Result result = _registrationService.ActivateUserAccount(request);
             if (result.IsFailed)

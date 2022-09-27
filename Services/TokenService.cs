@@ -18,16 +18,17 @@ namespace UsersAPI.Services
             _configuration = configuration;
         }
 
-        public Token CreateToken(IdentityUser<int> user)
+        public Token CreateToken(IdentityUser<int> user, string role)
         {
             Claim[] userRights = new Claim[]
             {
                 new Claim("username", user.UserName),
-                new Claim("id", user.Id.ToString())
+                new Claim("id", user.Id.ToString()),
+                new Claim(ClaimTypes.Role, role)
             };
 
             var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_configuration["JWT:key"])
+                Encoding.UTF8.GetBytes(_configuration.GetValue<string>("JWT:key"))
                 );
 
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

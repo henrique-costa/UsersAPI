@@ -33,6 +33,8 @@ namespace UsersAPI
             services.AddDbContext<UserDbContext>(options =>
             options.UseMySQL(Configuration.GetConnectionString("UserConnection"))
             );
+            
+
             services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(
                 opt => opt.SignIn.RequireConfirmedEmail = true
                 )
@@ -40,6 +42,7 @@ namespace UsersAPI
                 .AddDefaultTokenProviders();
             services.AddScoped<RegistrationService, RegistrationService>();
             services.AddScoped<TokenService, TokenService>();
+            services.AddScoped<EmailService, EmailService>();
             services.AddScoped<LoginService, LoginService>();
             services.AddScoped<LogoutService, LogoutService>();
             services.AddControllers();

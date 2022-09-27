@@ -28,5 +28,29 @@ namespace UsersAPI.Controllers
 
             return Ok(result.Successes.FirstOrDefault());
         }
+
+
+        [HttpPost("/password-reset")]
+        public IActionResult PasswordResetRequest(PasswordRequest request)
+        {
+            Result result = _loginService.PasswordResetRequest(request);
+            if (result.IsFailed)
+            {
+                return Unauthorized(result.Errors);
+            }
+            return Ok(result.Successes.FirstOrDefault());
+        }
+
+        [HttpPost("/do-password-reset")]
+        public IActionResult PasswordReset(DoPasswordRequest request)
+        {
+            Result result = _loginService.PasswordReset(request);
+            if (result.IsFailed)
+            {
+                return Unauthorized(result.Errors);
+            }
+            return Ok(result.Successes.FirstOrDefault());
+        }
+
     }
 }
