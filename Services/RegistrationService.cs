@@ -14,33 +14,29 @@ namespace UsersAPI.Services
     public class RegistrationService
     {
         private IMapper _mapper;
-        private UserManager<IdentityUser<int>> _userManager;
+        private UserManager<CustomIdentityUser> _userManager;
         private EmailService _emailService;
-        private RoleManager<IdentityRole<int>> _roleManager;
 
         public RegistrationService(IMapper mapper,
-            UserManager<IdentityUser<int>> userManager,
-            EmailService emailService, RoleManager<IdentityRole<int>> roleManager)
+            UserManager<CustomIdentityUser> userManager,
+            EmailService emailService)
         {
             _mapper = mapper;
             _userManager = userManager;
             _emailService = emailService;
-            _roleManager = roleManager;
         }
 
-        public Result RegisterUserAsync(CreateUserDTO createDto)
+        public Result RegisterUser(CreateUserDTO createDto)
         {
             UserModel user = _mapper.Map<UserModel>(createDto);
 
-            IdentityUser<int> identityUser = _mapper.Map<IdentityUser<int>>(user);
-            
-            var resultIdentity = _userManager.CreateAsync(identityUser, createDto.Password).Result;
+            CustomIdentityUser identityUser = _mapper.Map<CustomIdentityUser>(user);
 
-            var createRoleResult = _roleManager.CreateAsync(new IdentityRole<int>("admin")).Result;
+            IdentityResult identityResult = _userManager.CreateAsync(identityUser, createDto.Password).Result;
 
-            var userRoleResult =  _userManager.AddToRoleAsync(identityUser, "admin").Result;
+             _userManager.AddToRoleAsync(identityUser, "regular");            
 
-            if (resultIdentity.Succeeded)
+            if (identityResult.Succeeded)
             {
                 string code = _userManager.GenerateEmailConfirmationTokenAsync(identityUser).Result;
                 var encodedCode = HttpUtility.UrlEncode(code);
@@ -48,7 +44,7 @@ namespace UsersAPI.Services
                 return Result.Ok().WithSuccess(code);
             }
 
-            return Result.Fail($"Fail to register User + {resultIdentity.Errors.FirstOrDefault()}");
+            return Result.Fail($"Fail to register User + {identityResult.Errors.FirstOrDefault()}");
         }
 
         public Result ActivateUserAccount(ActivateAccountRequest request)

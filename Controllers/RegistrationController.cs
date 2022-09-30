@@ -21,7 +21,7 @@ namespace UsersAPI.Controllers
         [HttpPost]
         public IActionResult RegisterUser(CreateUserDTO createDto)
         {
-            Result result = _registrationService.RegisterUserAsync(createDto);
+            Result result = _registrationService.RegisterUser(createDto);
             if (result.IsFailed) 
             {
                 return StatusCode(500);

@@ -9,9 +9,9 @@ namespace UsersAPI.Services
 {
     public class LoginService
     {
-        private SignInManager<IdentityUser<int>> _signInManager;
+        private SignInManager<CustomIdentityUser> _signInManager;
         private TokenService _tokenService;
-        public LoginService(SignInManager<IdentityUser<int>> signInManager, TokenService tokenService)
+        public LoginService(SignInManager<CustomIdentityUser> signInManager, TokenService tokenService)
         {
             _signInManager = signInManager;
             _tokenService = tokenService;
@@ -29,6 +29,8 @@ namespace UsersAPI.Services
                     .Users
                     .FirstOrDefault(x => x.NormalizedUserName == request.UserName.ToUpper());
 
+                var carro = _signInManager.UserManager.GetRolesAsync(identityUser).Result.FirstOrDefault();
+
                 Token token = _tokenService.CreateToken(identityUser, _signInManager.UserManager.GetRolesAsync(identityUser).Result.FirstOrDefault());
                 return Result.Ok().WithSuccess(token.Value);
             }
@@ -39,7 +41,7 @@ namespace UsersAPI.Services
         
         public Result PasswordResetRequest(PasswordRequest request)
         {
-            IdentityUser<int> identityUser = GetUserByEmail(request.Email);
+            CustomIdentityUser identityUser = GetUserByEmail(request.Email);
 
             if (identityUser != null)
             {
@@ -52,7 +54,7 @@ namespace UsersAPI.Services
 
         public Result PasswordReset(DoPasswordRequest request)
         {
-            IdentityUser<int> identityUser = GetUserByEmail(request.Email);
+            CustomIdentityUser identityUser = GetUserByEmail(request.Email);
 
             IdentityResult identityResult = _signInManager.UserManager.ResetPasswordAsync(identityUser, request.Token, request.Password).Result;
 
@@ -65,7 +67,7 @@ namespace UsersAPI.Services
         }
 
 
-        private IdentityUser<int> GetUserByEmail(string email)
+        private CustomIdentityUser GetUserByEmail(string email)
         {
             return _signInManager.UserManager.Users.FirstOrDefault(x => x.NormalizedEmail == email.ToUpper());
         }

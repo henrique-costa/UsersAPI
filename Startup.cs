@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UsersAPI.Data;
+using UsersAPI.Model;
 using UsersAPI.Services;
 
 namespace UsersAPI
@@ -35,7 +36,7 @@ namespace UsersAPI
             );
             
 
-            services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(
+            services.AddIdentity<CustomIdentityUser, IdentityRole<int>>(
                 opt => opt.SignIn.RequireConfirmedEmail = true
                 )
                 .AddEntityFrameworkStores<UserDbContext>()
